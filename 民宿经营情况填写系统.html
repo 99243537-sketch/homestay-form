@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>民宿经营情况填写系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 6px;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            background: #f8f9fa;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            color: #667eea;
+            margin: 20px 0 15px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-label .required {
+            color: #ff4d4f;
+            margin-left: 4px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="tel"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover,
+        .radio-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item.checked,
+        .radio-item.checked {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .checkbox-item label,
+        .radio-item label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .percentage-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .percentage-input input {
+            flex: 1;
+        }
+
+        .percentage-input span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f4ff;
+        }
+
+        .output-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .output-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 20px 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .output-text {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .tag-input input {
+            border: none;
+            flex: 1;
+            min-width: 120px;
+            padding: 4px;
+        }
+
+        .tag-input input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                margin: -20px;
+                min-height: 100vh;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .checkbox-group,
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .collapsible {
+            cursor: pointer;
+        }
+
+        .collapsible-content {
+            max-height: 10000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+        }
+
+        .toggle-icon {
+            margin-left: auto;
+            transition: transform 0.3s;
+        }
+
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏡 民宿经营情况填写系统</h1>
+            <p>全面描述您的民宿经营情况，生成AI提示词</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">已完成 0%</div>
+
+        <form id="homestayForm" class="form-container">
+            <!-- 第一部分：基础信息 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">1</div>
+                    <span>基础信息</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">民宿名称 <span class="required">*</span></label>
+                            <input type="text" name="name" placeholder="请输入民宿名称" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">开业时间</label>
+                            <input type="text" name="openDate" placeholder="如：2020年3月">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">所在省份 <span class="required">*</span></label>
+                            <select name="province" required>
+                                <option value="">请选择省份</option>
+                                <option value="浙江">浙江</option>
+                                <option value="江苏">江苏</option>
+                                <option value="上海">上海</option>
+                                <option value="北京">北京</option>
+                                <option value="广东">广东</option>
+                                <option value="四川">四川</option>
+                                <option value="云南">云南</option>
+                                <option value="福建">福建</option>
+                                <option value="山东">山东</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">所在城市 <span class="required">*</span></label>
+                            <input type="text" name="city" placeholder="如：杭州" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">详细地址</label>
+                        <input type="text" name="address" placeholder="具体街道/乡村位置">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">周边景点（多选）</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot1" name="spots" value="山景区">
+                                <label for="spot1">山景区</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot2" name="spots" value="湖泊/水库">
+                                <label for="spot2">湖泊/水库</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot3" name="spots" value="古镇/古村落">
+                                <label for="spot3">古镇/古村落</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot4" name="spots" value="海边/海岛">
+                                <label for="spot4">海边/海岛</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot5" name="spots" value="森林公园">
+                                <label for="spot5">森林公园</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot6" name="spots" value="温泉">
+                                <label for="spot6">温泉</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot7" name="spots" value="主题乐园">
+                                <label for="spot7">主题乐园</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spot8" name="spots" value="其他">
+                                <label for="spot8">其他</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二部分：硬件设施 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">2</div>
+                    <span>硬件设施</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">房间总数 <span class="required">*</span></label>
+                            <input type="number" name="roomCount" placeholder="如：10" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">建筑面积（平方米）</label>
+                            <input type="number" name="area" placeholder="如：500">
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">房型配置（勾选并填写数量）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type1" name="roomTypes" value="大床房">
+                            <label for="type1">大床房</label>
+                            <input type="number" style="width:60px;margin-left:10px;" placeholder="间" min="0">
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type2" name="roomTypes" value="双床房">
+                            <label for="type2">双床房</label>
+                            <input type="number" style="width:60px;margin-left:10px;" placeholder="间" min="0">
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type3" name="roomTypes" value="家庭房">
+                            <label for="type3">家庭房</label>
+                            <input type="number" style="width:60px;margin-left:10px;" placeholder="间" min="0">
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type4" name="roomTypes" value="套房">
+                            <label for="type4">套房</label>
+                            <input type="number" style="width:60px;margin-left:10px;" placeholder="间" min="0">
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type5" name="roomTypes" value="特色主题房">
+                            <label for="type5">特色主题房</label>
+                            <input type="number" style="width:60px;margin-left:10px;" placeholder="间" min="0">
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">特色设施（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac1" name="facilities" value="无边泳池">
+                            <label for="fac1">无边泳池</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac2" name="facilities" value="温泉/泡池">
+                            <label for="fac2">温泉/泡池</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac3" name="facilities" value="庭院/花园">
+                            <label for="fac3">庭院/花园</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac4" name="facilities" value="露台/观景平台">
+                            <label for="fac4">露台/观景平台</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac5" name="facilities" value="餐厅">
+                            <label for="fac5">餐厅</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac6" name="facilities" value="茶室/书吧">
+                            <label for="fac6">茶室/书吧</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac7" name="facilities" value="会议室">
+                            <label for="fac7">会议室</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac8" name="facilities" value="棋牌室">
+                            <label for="fac8">棋牌室/影音室</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac9" name="facilities" value="停车场">
+                            <label for="fac9">停车场</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fac10" name="facilities" value="充电桩">
+                            <label for="fac10">充电桩</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">智能设备（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smart1" name="smartDevices" value="智能门锁">
+                            <label for="smart1">智能门锁</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smart2" name="smartDevices" value="智能电视">
+                            <label for="smart2">智能电视/投影</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smart3" name="smartDevices" value="智能窗帘">
+                            <label for="smart3">智能窗帘</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smart4" name="smartDevices" value="智能音箱">
+                            <label for="smart4">智能音箱</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="smart5" name="smartDevices" value="智能马桶">
+                            <label for="smart5">智能马桶</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三部分：服务特色 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">3</div>
+                    <span>服务特色</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">基础服务（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service1" name="basicServices" value="免费早餐">
+                            <label for="service1">免费早餐</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service2" name="basicServices" value="免费WiFi">
+                            <label for="service2">免费WiFi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service3" name="basicServices" value="免费停车">
+                            <label for="service3">免费停车</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service4" name="basicServices" value="行李寄存">
+                            <label for="service4">行李寄存</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service5" name="basicServices" value="接送服务">
+                            <label for="service5">接送服务</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service6" name="basicServices" value="旅游咨询">
+                            <label for="service6">旅游咨询/攻略</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service7" name="basicServices" value="票务代订">
+                            <label for="service7">票务代订</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service8" name="basicServices" value="洗衣服务">
+                            <label for="service8">洗衣服务</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">体验活动（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp1" name="activities" value="农产品采摘">
+                            <label for="exp1">农产品采摘</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp2" name="activities" value="手工艺体验">
+                            <label for="exp2">手工艺体验（陶艺/扎染等）</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp3" name="activities" value="茶道/香道">
+                            <label for="exp3">茶道/香道体验</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp4" name="activities" value="户外徒步">
+                            <label for="exp4">户外徒步/骑行</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp5" name="activities" value="垂钓">
+                            <label for="exp5">垂钓</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp6" name="activities" value="烧烤/篝火">
+                            <label for="exp6">烧烤/篝火晚会</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp7" name="activities" value="亲子活动">
+                            <label for="exp7">亲子活动</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp8" name="activities" value="瑜伽/冥想">
+                            <label for="exp8">瑜伽/冥想</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">特色服务亮点</label>
+                        <textarea name="serviceHighlights" placeholder="描述您最具特色的服务项目，客人评价最高的服务等"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第四部分：价格体系 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">4</div>
+                    <span>价格体系</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">平日价格区间（元/晚）</label>
+                            <input type="text" name="weekdayPrice" placeholder="如：300-600">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">周末价格区间（元/晚）</label>
+                            <input type="text" name="weekendPrice" placeholder="如：400-800">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">节假日价格区间（元/晚）</label>
+                        <input type="text" name="holidayPrice" placeholder="如：600-1200">
+                    </div>
+
+                    <div class="subsection-title">优惠政策（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="discount1" name="discounts" value="连住优惠">
+                            <label for="discount1">连住优惠</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="discount2" name="discounts" value="团体优惠">
+                            <label for="discount2">团体优惠（多间房）</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="discount3" name="discounts" value="早鸟优惠">
+                            <label for="discount3">早鸟优惠（提前预订）</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="discount4" name="discounts" value="会员优惠">
+                            <label for="discount4">会员优惠</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="discount5" name="discounts" value="老客户优惠">
+                            <label for="discount5">老客户复购优惠</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第五部分：客群分析 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">5</div>
+                    <span>客群分析</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">主要客源（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source1" name="guestSource" value="省内客人">
+                            <label for="source1">省内客人</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source2" name="guestSource" value="上海">
+                            <label for="source2">上海</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source3" name="guestSource" value="江苏">
+                            <label for="source3">江苏</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source4" name="guestSource" value="广东">
+                            <label for="source4">广东</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source5" name="guestSource" value="北京">
+                            <label for="source5">北京</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="source6" name="guestSource" value="其他省市">
+                            <label for="source6">其他省市</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">出行目的（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose1" name="travelPurpose" value="休闲度假">
+                            <label for="purpose1">休闲度假</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose2" name="travelPurpose" value="家庭出游">
+                            <label for="purpose2">家庭出游</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose3" name="travelPurpose" value="情侣/蜜月">
+                            <label for="purpose3">情侣/蜜月</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose4" name="travelPurpose" value="商务出行">
+                            <label for="purpose4">商务出行</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose5" name="travelPurpose" value="团建活动">
+                            <label for="purpose5">团建活动</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="purpose6" name="travelPurpose" value="摄影/打卡">
+                            <label for="purpose6">摄影/打卡</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">客人最看重的因素（按重要性排序）</label>
+                        <textarea name="guestPriorities" placeholder="如：1.环境卫生 2.服务质量 3.交通便利 4.价格合理 5.景观视野"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第六部分：品牌定位 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">6</div>
+                    <span>品牌定位</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">民宿定位（单选）</div>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="position1" name="position" value="高端精品">
+                            <label for="position1">高端精品（房价800元以上）</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="position2" name="position" value="中端舒适">
+                            <label for="position2">中端舒适（房价300-800元）</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="position3" name="position" value="经济实惠">
+                            <label for="position3">经济实惠（房价300元以下）</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="position4" name="position" value="特色主题">
+                            <label for="position4">特色主题（文化/艺术/自然）</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">风格关键词（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style1" name="style" value="文艺清新">
+                            <label for="style1">文艺清新</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style2" name="style" value="简约现代">
+                            <label for="style2">简约现代</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style3" name="style" value="古朴典雅">
+                            <label for="style3">古朴典雅</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style4" name="style" value="田园自然">
+                            <label for="style4">田园自然</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style5" name="style" value="奢华高端">
+                            <label for="style5">奢华高端</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style6" name="style" value="温馨家庭">
+                            <label for="style6">温馨家庭</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style7" name="style" value="禅意静心">
+                            <label for="style7">禅意静心</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="style8" name="style" value="复古怀旧">
+                            <label for="style8">复古怀旧</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">品牌故事/创办背景</label>
+                        <textarea name="brandStory" placeholder="分享您的民宿创办故事、命名由来、经营理念等"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">品牌口号/Slogan</label>
+                        <input type="text" name="slogan" placeholder="如：让心灵回归自然">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第七部分：营销现状 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">7</div>
+                    <span>营销现状</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">主要营销渠道（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel1" name="channels" value="携程">
+                            <label for="channel1">携程</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel2" name="channels" value="美团">
+                            <label for="channel2">美团</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel3" name="channels" value="去哪儿">
+                            <label for="channel3">去哪儿</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel4" name="channels" value="飞猪">
+                            <label for="channel4">飞猪</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel5" name="channels" value="小红书">
+                            <label for="channel5">小红书</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel6" name="channels" value="抖音">
+                            <label for="channel6">抖音</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel7" name="channels" value="微信">
+                            <label for="channel7">微信（公众号/朋友圈）</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel8" name="channels" value="直客">
+                            <label for="channel8">电话/微信直订</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">平台评分情况</label>
+                        <input type="text" name="platformRating" placeholder="如：携程4.9分、美团5.0分">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">当前营销痛点</label>
+                        <textarea name="marketingPainPoints" placeholder="描述您目前营销面临的主要困难和挑战"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第八部分：需要AI协助的文案类型 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">8</div>
+                    <span>需要AI协助的文案类型</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">平台运营类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="copy1" name="copyTypes" value="OTA房源描述">
+                            <label for="copy1">OTA平台房源描述优化</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="copy2" name="copyTypes" value="平台标题优化">
+                            <label for="copy2">平台标题优化</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="copy3" name="copyTypes" value="房东故事">
+                            <label for="copy3">房东故事/自我介绍</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="copy4" name="copyTypes" value="回复模板">
+                            <label for="copy4">咨询/好评/差评回复模板</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">社交媒体类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="social1" name="copyTypes" value="小红书文案">
+                            <label for="social1">小红书种草文案</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="social2" name="copyTypes" value="抖音脚本">
+                            <label for="social2">抖音短视频脚本</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="social3" name="copyTypes" value="朋友圈文案">
+                            <label for="social3">微信朋友圈文案</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="social4" name="copyTypes" value="公众号推文">
+                            <label for="social4">微信公众号推文</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">营销推广类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="promo1" name="copyTypes" value="促销活动">
+                            <label for="promo1">促销活动文案</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="promo2" name="copyTypes" value="节假日营销">
+                            <label for="promo2">节假日营销方案</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="promo3" name="copyTypes" value="会员招募">
+                            <label for="promo3">会员招募文案</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="promo4" name="copyTypes" value="老客户召回">
+                            <label for="promo4">老客户召回文案</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">品牌建设类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="brand1" name="copyTypes" value="品牌故事">
+                            <label for="brand1">品牌故事撰写</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="brand2" name="copyTypes" value="品牌口号">
+                            <label for="brand2">品牌口号/Slogan创作</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="brand3" name="copyTypes" value="宣传册文案">
+                            <label for="brand3">宣传册/折页文案</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">服务提升类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="serviceDoc1" name="copyTypes" value="入住指南">
+                            <label for="serviceDoc1">入住指南/须知</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="serviceDoc2" name="copyTypes" value="游玩攻略">
+                            <label for="serviceDoc2">周边游玩攻略</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="serviceDoc3" name="copyTypes" value="欢迎信">
+                            <label for="serviceDoc3">欢迎信/感谢信模板</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第九部分：文案风格偏好 -->
+            <div class="section">
+                <div class="section-title collapsible" onclick="toggleSection(this)">
+                    <div class="icon">9</div>
+                    <span>文案风格偏好</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="subsection-title">语言风格（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang1" name="languageStyle" value="文艺清新">
+                            <label for="lang1">文艺清新</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang2" name="languageStyle" value="亲切温暖">
+                            <label for="lang2">亲切温暖</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang3" name="languageStyle" value="专业严谨">
+                            <label for="lang3">专业严谨</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang4" name="languageStyle" value="幽默风趣">
+                            <label for="lang4">幽默风趣</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang5" name="languageStyle" value="高端大气">
+                            <label for="lang5">高端大气</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang6" name="languageStyle" value="朴实自然">
+                            <label for="lang6">朴实自然</label>
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">内容侧重点（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus1" name="contentFocus" value="硬件设施">
+                            <label for="focus1">突出硬件设施</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus2" name="contentFocus" value="服务品质">
+                            <label for="focus2">强调服务品质</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus3" name="contentFocus" value="品牌故事">
+                            <label for="focus3">讲述品牌故事</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus4" name="contentFocus" value="体验活动">
+                            <label for="focus4">展示体验活动</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus5" name="contentFocus" value="周边景点">
+                            <label for="focus5">介绍周边景点</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="focus6" name="contentFocus" value="客户好评">
+                            <label for="focus6">分享客户好评</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">其他特殊要求</label>
+                        <textarea name="specialRequirements" placeholder="如：字数要求、必须包含的关键词、避免使用的词汇等"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="saveDraft()">💾 保存草稿</button>
+            <button type="button" class="btn btn-primary" onclick="generatePrompt()">✨ 生成AI提示词</button>
+        </div>
+    </div>
+
+    <!-- 输出模态框 -->
+    <div class="output-modal" id="outputModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 生成的AI提示词</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:15px;color:#666;">请复制以下内容，发送给AI助手：</p>
+                <div class="output-text" id="outputText"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 复制到剪贴板</button>
+                <button class="btn btn-primary" onclick="closeModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换折叠面板
+        function toggleSection(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            content.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+            icon.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const inputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const radios = document.querySelectorAll('input[type="radio"]:checked');
+            
+            let filledInputs = 0;
+            inputs.forEach(input => {
+                if (input.value.trim()) filledInputs++;
+            });
+            
+            const totalFields = inputs.length + 20; // 估算总字段数
+            const currentProgress = Math.min(100, Math.round(((filledInputs + checkboxes.length + radios.length) / totalFields) * 100));
+            
+            document.getElementById('progressFill').style.width = currentProgress + '%';
+            document.getElementById('progressText').textContent = `已完成 ${currentProgress}%`;
+        }
+
+        // 监听所有输入变化
+        document.querySelectorAll('input, textarea, select').forEach(element => {
+            element.addEventListener('change', updateProgress);
+            element.addEventListener('input', updateProgress);
+        });
+
+        // 复选框样式切换
+        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                this.closest('.checkbox-item').classList.toggle('checked', this.checked);
+            });
+        });
+
+        // 单选框样式切换
+        document.querySelectorAll('.radio-item input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.radio-item').forEach(item => item.classList.remove('checked'));
+                this.closest('.radio-item').classList.add('checked');
+            });
+        });
+
+        // 生成AI提示词
+        function generatePrompt() {
+            const form = document.getElementById('homestayForm');
+            const formData = new FormData(form);
+            
+            let prompt = `请根据以下我的民宿经营情况，帮我生成运营文案：\n\n`;
+            prompt += `【民宿基本信息】\n`;
+            prompt += `• 民宿名称：${formData.get('name') || '未填写'}\n`;
+            prompt += `• 所在地区：${formData.get('province') || ''}${formData.get('city') || ''}\n`;
+            prompt += `• 开业时间：${formData.get('openDate') || '未填写'}\n`;
+            
+            const spots = formData.getAll('spots');
+            if (spots.length) prompt += `• 周边景点：${spots.join('、')}\n`;
+            
+            prompt += `\n【硬件设施】\n`;
+            prompt += `• 房间总数：${formData.get('roomCount') || '未填写'}间\n`;
+            
+            const facilities = formData.getAll('facilities');
+            if (facilities.length) prompt += `• 特色设施：${facilities.join('、')}\n`;
+            
+            const smartDevices = formData.getAll('smartDevices');
+            if (smartDevices.length) prompt += `• 智能设备：${smartDevices.join('、')}\n`;
+            
+            prompt += `\n【服务特色】\n`;
+            const basicServices = formData.getAll('basicServices');
+            if (basicServices.length) prompt += `• 基础服务：${basicServices.join('、')}\n`;
+            
+            const activities = formData.getAll('activities');
+            if (activities.length) prompt += `• 体验活动：${activities.join('、')}\n`;
+            
+            if (formData.get('serviceHighlights')) {
+                prompt += `• 服务亮点：${formData.get('serviceHighlights')}\n`;
+            }
+            
+            prompt += `\n【价格体系】\n`;
+            if (formData.get('weekdayPrice')) prompt += `• 平日价格：${formData.get('weekdayPrice')}元/晚\n`;
+            if (formData.get('weekendPrice')) prompt += `• 周末价格：${formData.get('weekendPrice')}元/晚\n`;
+            
+            const discounts = formData.getAll('discounts');
+            if (discounts.length) prompt += `• 优惠政策：${discounts.join('、')}\n`;
+            
+            prompt += `\n【客群分析】\n`;
+            const guestSource = formData.getAll('guestSource');
+            if (guestSource.length) prompt += `• 主要客源：${guestSource.join('、')}\n`;
+            
+            const travelPurpose = formData.getAll('travelPurpose');
+            if (travelPurpose.length) prompt += `• 出行目的：${travelPurpose.join('、')}\n`;
+            
+            if (formData.get('guestPriorities')) {
+                prompt += `• 客人看重：${formData.get('guestPriorities')}\n`;
+            }
+            
+            prompt += `\n【品牌定位】\n`;
+            if (formData.get('position')) prompt += `• 民宿定位：${formData.get('position')}\n`;
+            
+            const style = formData.getAll('style');
+            if (style.length) prompt += `• 风格关键词：${style.join('、')}\n`;
+            
+            if (formData.get('slogan')) prompt += `• 品牌口号：${formData.get('slogan')}\n`;
+            if (formData.get('brandStory')) prompt += `• 品牌故事：${formData.get('brandStory')}\n`;
+            
+            prompt += `\n【营销渠道】\n`;
+            const channels = formData.getAll('channels');
+            if (channels.length) prompt += `• 主要渠道：${channels.join('、')}\n`;
+            if (formData.get('platformRating')) prompt += `• 平台评分：${formData.get('platformRating')}\n`;
+            
+            prompt += `\n【需要生成的文案类型】\n`;
+            const copyTypes = formData.getAll('copyTypes');
+            if (copyTypes.length) prompt += `• ${copyTypes.join('、')}\n`;
+            
+            prompt += `\n【文案风格要求】\n`;
+            const languageStyle = formData.getAll('languageStyle');
+            if (languageStyle.length) prompt += `• 语言风格：${languageStyle.join('、')}\n`;
+            
+            const contentFocus = formData.getAll('contentFocus');
+            if (contentFocus.length) prompt += `• 内容侧重：${contentFocus.join('、')}\n`;
+            
+            if (formData.get('specialRequirements')) {
+                prompt += `• 特殊要求：${formData.get('specialRequirements')}\n`;
+            }
+            
+            prompt += `\n请根据以上信息，生成符合我民宿特色的专业运营文案。`;
+            
+            document.getElementById('outputText').textContent = prompt;
+            document.getElementById('outputModal').classList.add('active');
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('outputModal').classList.remove('active');
+        }
+
+        // 复制到剪贴板
+        function copyToClipboard() {
+            const text = document.getElementById('outputText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('已复制到剪贴板！');
+            }).catch(err => {
+                // 降级方案
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('已复制到剪贴板！');
+            });
+        }
+
+        // 保存草稿到本地存储
+        function saveDraft() {
+            const form = document.getElementById('homestayForm');
+            const formData = new FormData(form);
+            const data = {};
+            
+            // 保存文本输入
+            form.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+                data[input.name] = input.value;
+            });
+            
+            // 保存选择框
+            form.querySelectorAll('select').forEach(select => {
+                data[select.name] = select.value;
+            });
+            
+            // 保存复选框
+            form.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (!data[checkbox.name]) data[checkbox.name] = [];
+                if (checkbox.checked) data[checkbox.name].push(checkbox.value);
+            });
+            
+            // 保存单选框
+            form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                data[radio.name] = radio.value;
+            });
+            
+            localStorage.setItem('homestayFormDraft', JSON.stringify(data));
+            alert('草稿已保存到本地！');
+        }
+
+        // 加载草稿
+        function loadDraft() {
+            const draft = localStorage.getItem('homestayFormDraft');
+            if (!draft) return;
+            
+            const data = JSON.parse(draft);
+            
+            // 恢复文本输入
+            document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+                if (data[input.name]) input.value = data[input.name];
+            });
+            
+            // 恢复选择框
+            document.querySelectorAll('select').forEach(select => {
+                if (data[select.name]) select.value = data[select.name];
+            });
+            
+            // 恢复复选框
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (data[checkbox.name] && data[checkbox.name].includes(checkbox.value)) {
+                    checkbox.checked = true;
+                    checkbox.closest('.checkbox-item')?.classList.add('checked');
+                }
+            });
+            
+            // 恢复单选框
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                if (data[radio.name] === radio.value) {
+                    radio.checked = true;
+                    radio.closest('.radio-item')?.classList.add('checked');
+                }
+            });
+            
+            updateProgress();
+        }
+
+        // 页面加载时尝试恢复草稿
+        window.addEventListener('load', loadDraft);
+
+        // 点击模态框外部关闭
+        document.getElementById('outputModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
