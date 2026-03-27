@@ -737,6 +737,10 @@
                             <input type="checkbox" id="exp8" name="activities" value="瑜伽/冥想">
                             <label for="exp8">瑜伽/冥想</label>
                         </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="exp9" name="activities" value="民俗活动（灯会/舞龙等）">
+                            <label for="exp9">民俗活动（灯会/舞龙等）</label>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -1082,6 +1086,26 @@
                         </div>
                     </div>
 
+                    <div class="subsection-title">图片生成类（多选）</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="img1" name="copyTypes" value="宣传海报">
+                            <label for="img1">宣传海报</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="img2" name="copyTypes" value="字体设计">
+                            <label for="img2">字体设计</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="img3" name="copyTypes" value="Logo设计">
+                            <label for="img3">Logo设计</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="img4" name="copyTypes" value="周边产品图样">
+                            <label for="img4">周边产品图样</label>
+                        </div>
+                    </div>
+
                     <div class="subsection-title">服务提升类（多选）</div>
                     <div class="checkbox-group">
                         <div class="checkbox-item">
@@ -1311,9 +1335,21 @@
             if (channels.length) prompt += `• 主要渠道：${channels.join('、')}\n`;
             if (formData.get('platformRating')) prompt += `• 平台评分：${formData.get('platformRating')}\n`;
             
-            prompt += `\n【需要生成的文案类型】\n`;
+            const imgTypes = ['宣传海报', '字体设计', 'Logo设计', '周边产品图样'];
             const copyTypes = formData.getAll('copyTypes');
-            if (copyTypes.length) prompt += `• ${copyTypes.join('、')}\n`;
+            const textCopyTypes = copyTypes.filter(t => !imgTypes.includes(t));
+            const imgCopyTypes = copyTypes.filter(t => imgTypes.includes(t));
+
+            if (textCopyTypes.length) {
+                prompt += `\n【需要生成的文案类型】\n`;
+                prompt += `• ${textCopyTypes.join('、')}\n`;
+            }
+
+            if (imgCopyTypes.length) {
+                prompt += `\n【需要生成的图片提示词类型】\n`;
+                prompt += `• ${imgCopyTypes.join('、')}\n`;
+                prompt += `（请为以上每项生成适合AI绘图工具（如Midjourney/Stable Diffusion）使用的详细图片生成提示词，风格需契合民宿整体调性）\n`;
+            }
             
             prompt += `\n【文案风格要求】\n`;
             const languageStyle = formData.getAll('languageStyle');
@@ -1326,7 +1362,7 @@
                 prompt += `• 特殊要求：${formData.get('specialRequirements')}\n`;
             }
             
-            prompt += `\n请根据以上信息，生成符合我民宿特色的专业运营文案。`;
+            prompt += `\n请根据以上信息，生成符合我民宿特色的专业运营文案及图片生成提示词。`;
             
             document.getElementById('outputText').textContent = prompt;
             document.getElementById('outputModal').classList.add('active');
